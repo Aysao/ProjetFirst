@@ -1,0 +1,19 @@
+- Scénario -> Matthieu
+	- Chapitre 1 
+		- Element déclencheur
+		- Background
+		- ...
+- Définir une map grande échelle -> Fafa
+	- Définir la structure (plusieurs îles ou un continent)
+	- Définir le nom des villes
+	- Organiser l'appartenance des terres pour chaque contré
+	- (Plusieurs map ? monde des elfs, monde inversé, ...)
+- Créer Chaque map
+	- 1er Map un chateau
+		- Cinematique début
+		- Scénario debut 
+		- ...
+- Modifier certains élement du jeu
+	- Classes
+	- Personnages 
+	- Gestion des sorts
