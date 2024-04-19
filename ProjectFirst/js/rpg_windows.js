@@ -1036,68 +1036,18 @@ Window_Selectable.prototype.processHandling = function() {
 };
 
 Window_Selectable.prototype.processWheel = function() {
-    if (this.isOpenAndActive()) {
-        var threshold = 20;
-        if (TouchInput.wheelY >= threshold) {
-            this.scrollDown();
-        }
-        if (TouchInput.wheelY <= -threshold) {
-            this.scrollUp();
-        }
-    }
 };
 
 Window_Selectable.prototype.processTouch = function() {
-    if (this.isOpenAndActive()) {
-        if (TouchInput.isTriggered() && this.isTouchedInsideFrame()) {
-            this._touching = true;
-            this.onTouch(true);
-        } else if (TouchInput.isCancelled()) {
-            if (this.isCancelEnabled()) {
-                this.processCancel();
-            }
-        }
-        if (this._touching) {
-            if (TouchInput.isPressed()) {
-                this.onTouch(false);
-            } else {
-                this._touching = false;
-            }
-        }
-    } else {
-        this._touching = false;
-    }
+    this._touching = false;
 };
 
 Window_Selectable.prototype.isTouchedInsideFrame = function() {
-    var x = this.canvasToLocalX(TouchInput.x);
-    var y = this.canvasToLocalY(TouchInput.y);
-    return x >= 0 && y >= 0 && x < this.width && y < this.height;
+    return false;
 };
 
 Window_Selectable.prototype.onTouch = function(triggered) {
-    var lastIndex = this.index();
-    var x = this.canvasToLocalX(TouchInput.x);
-    var y = this.canvasToLocalY(TouchInput.y);
-    var hitIndex = this.hitTest(x, y);
-    if (hitIndex >= 0) {
-        if (hitIndex === this.index()) {
-            if (triggered && this.isTouchOkEnabled()) {
-                this.processOk();
-            }
-        } else if (this.isCursorMovable()) {
-            this.select(hitIndex);
-        }
-    } else if (this._stayCount >= 10) {
-        if (y < this.padding) {
-            this.cursorUp();
-        } else if (y >= this.height - this.padding) {
-            this.cursorDown();
-        }
-    }
-    if (this.index() !== lastIndex) {
-        SoundManager.playCursor();
-    }
+    return false;
 };
 
 Window_Selectable.prototype.hitTest = function(x, y) {
@@ -2666,9 +2616,14 @@ Window_Options.prototype.updatePlacement = function() {
 };
 
 Window_Options.prototype.makeCommandList = function() {
+    this.addGraphicOptions();
     this.addGeneralOptions();
     this.addVolumeOptions();
 };
+
+Window_Options.prototype.addGraphicOptions = function(){
+    
+}
 
 Window_Options.prototype.addGeneralOptions = function() {
     this.addCommand(TextManager.alwaysDash, 'alwaysDash');

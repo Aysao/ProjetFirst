@@ -1996,10 +1996,6 @@ Graphics.printLoadingError = function(url) {
         button.style.fontSize = '24px';
         button.style.color = '#ffffff';
         button.style.backgroundColor = '#000000';
-        button.onmousedown = button.ontouchstart = function(event) {
-            ResourceHandler.retry();
-            event.stopPropagation();
-        };
         this._errorPrinter.appendChild(button);
         this._loadingCount = -Infinity;
     }
@@ -2809,7 +2805,6 @@ Graphics._setupEventHandlers = function() {
     window.addEventListener('resize', this._onWindowResize.bind(this));
     document.addEventListener('keydown', this._onKeyDown.bind(this));
     document.addEventListener('keydown', this._onTouchEnd.bind(this));
-    document.addEventListener('mousedown', this._onTouchEnd.bind(this));
     document.addEventListener('touchend', this._onTouchEnd.bind(this));
 };
 
@@ -3485,7 +3480,6 @@ TouchInput.keyRepeatInterval = 6;
  * @method clear
  */
 TouchInput.clear = function() {
-    this._mousePressed = false;
     this._screenPressed = false;
     this._pressedTime = 0;
     this._events = {};
@@ -3493,14 +3487,10 @@ TouchInput.clear = function() {
     this._events.cancelled = false;
     this._events.moved = false;
     this._events.released = false;
-    this._events.wheelX = 0;
-    this._events.wheelY = 0;
     this._triggered = false;
     this._cancelled = false;
     this._moved = false;
     this._released = false;
-    this._wheelX = 0;
-    this._wheelY = 0;
     this._x = 0;
     this._y = 0;
     this._date = 0;
@@ -3688,111 +3678,11 @@ Object.defineProperty(TouchInput, 'date', {
  */
 TouchInput._setupEventHandlers = function() {
     var isSupportPassive = Utils.isSupportPassiveEvent();
-    document.addEventListener('mousedown', this._onMouseDown.bind(this));
-    document.addEventListener('mousemove', this._onMouseMove.bind(this));
-    document.addEventListener('mouseup', this._onMouseUp.bind(this));
-    document.addEventListener('wheel', this._onWheel.bind(this));
     document.addEventListener('touchstart', this._onTouchStart.bind(this), isSupportPassive ? {passive: false} : false);
     document.addEventListener('touchmove', this._onTouchMove.bind(this), isSupportPassive ? {passive: false} : false);
     document.addEventListener('touchend', this._onTouchEnd.bind(this));
     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));
     document.addEventListener('pointerdown', this._onPointerDown.bind(this));
-};
-
-/**
- * @static
- * @method _onMouseDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMouseDown = function(event) {
-    if (event.button === 0) {
-        this._onLeftButtonDown(event);
-    } else if (event.button === 1) {
-        this._onMiddleButtonDown(event);
-    } else if (event.button === 2) {
-        this._onRightButtonDown(event);
-    }
-};
-
-/**
- * @static
- * @method _onLeftButtonDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onLeftButtonDown = function(event) {
-    var x = Graphics.pageToCanvasX(event.pageX);
-    var y = Graphics.pageToCanvasY(event.pageY);
-    if (Graphics.isInsideCanvas(x, y)) {
-        this._mousePressed = true;
-        this._pressedTime = 0;
-        this._onTrigger(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onMiddleButtonDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMiddleButtonDown = function(event) {
-};
-
-/**
- * @static
- * @method _onRightButtonDown
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onRightButtonDown = function(event) {
-    var x = Graphics.pageToCanvasX(event.pageX);
-    var y = Graphics.pageToCanvasY(event.pageY);
-    if (Graphics.isInsideCanvas(x, y)) {
-        this._onCancel(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onMouseMove
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMouseMove = function(event) {
-    if (this._mousePressed) {
-        var x = Graphics.pageToCanvasX(event.pageX);
-        var y = Graphics.pageToCanvasY(event.pageY);
-        this._onMove(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onMouseUp
- * @param {MouseEvent} event
- * @private
- */
-TouchInput._onMouseUp = function(event) {
-    if (event.button === 0) {
-        var x = Graphics.pageToCanvasX(event.pageX);
-        var y = Graphics.pageToCanvasY(event.pageY);
-        this._mousePressed = false;
-        this._onRelease(x, y);
-    }
-};
-
-/**
- * @static
- * @method _onWheel
- * @param {WheelEvent} event
- * @private
- */
-TouchInput._onWheel = function(event) {
-    this._events.wheelX += event.deltaX;
-    this._events.wheelY += event.deltaY;
-    event.preventDefault();
 };
 
 /**
@@ -7820,7 +7710,6 @@ WebAudio._setupEventHandlers = function() {
         }
     };
     document.addEventListener("keydown", resumeHandler);
-    document.addEventListener("mousedown", resumeHandler);
     document.addEventListener("touchend", resumeHandler);
     document.addEventListener('touchstart', this._onTouchStart.bind(this));
     document.addEventListener('visibilitychange', this._onVisibilityChange.bind(this));
